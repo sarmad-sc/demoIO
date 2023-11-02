@@ -1,8 +1,8 @@
 package com.example.demoIO.controller;
 
-import com.example.demoIO.DemoIoApplication;
 import com.example.demoIO.entity.Entity;
 import com.example.demoIO.service.Service;
+import com.example.demoIO.util.MultiThread;
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
@@ -42,9 +42,9 @@ public class Controller {
             wb.getSheets().forEach(sheet -> {
 
                 try (Stream<Row> rows = sheet.openStream()) {
-                    rows.skip(1).forEach(r -> {
-                        Entity entity = DemoIoApplication.getEntity();
-                        for (Cell cell : r) {
+                    rows.skip(1).forEach(row -> {
+                        Entity entity = new Entity();
+                        for (Cell cell : row) {
                             int columnIndex = cell.getColumnIndex();
                             if (columnIndex == 0) entity.setSR_NO(cell.asString());
                             else if (columnIndex == 1) entity.setNTN(cell.asString());
@@ -52,7 +52,7 @@ public class Controller {
                             else if (columnIndex == 3) entity.setBUSINESS_NAME(cell.asString());
                         }
                         list.add(entity);
-                        if (list.size() == 10000) {
+                        if (list.size() == 1000) {
                             service.saveAll(list);
                             list.clear();
                         }
@@ -83,5 +83,14 @@ public class Controller {
         map.put("HeapMaxSize", Runtime.getRuntime().maxMemory());
         map.put("HeapFreeSize", Runtime.getRuntime().freeMemory());
         return map;
+    }
+
+    @GetMapping("runThread")
+    public String runThread() {
+        for (int i = 0; i < 4; i++) {
+            Thread thread = new Thread(new MultiThread(i));
+            thread.start();
+        }
+        return "thread ran";
     }
 }

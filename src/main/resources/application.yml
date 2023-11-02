@@ -20,8 +20,6 @@ spring:
         show_sql: true
         format_sql: true
 
-
-
   datasource:
     url: jdbc:mysql://localhost:3306/jio?createDatabaseIfNotExist=true&sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&cachePrepStmts=true&useServerPrepStmts=true&rewriteBatchedStatements=true
     username: root
